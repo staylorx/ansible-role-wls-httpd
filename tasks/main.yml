@@ -1,0 +1,25 @@
+---
+
+      - include: httpd-common.yml
+
+      - name: remove the lua file
+        file:
+          path:  /etc/httpd/conf.modules.d/00-lua.conf
+          state: absent
+
+      - name: remove the dav file
+        file:
+          path:  /etc/httpd/conf.modules.d/00-dav.conf
+          state: absent
+       
+      - name: remove the proxy file
+        file:
+          path:  /etc/httpd/conf.modules.d/01-proxy.conf
+          state: absent
+
+      - name: set service running
+        service:
+          name:    httpd
+          enabled: yes
+          state:   restarted
+

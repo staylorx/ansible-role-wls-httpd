@@ -1,0 +1,22 @@
+#This configuration file loads a weblogic plugin module.
+
+LoadModule weblogic_module modules/mod_wl_24.so
+
+<IfModule mod_weblogic.c>
+  #Unless dynamic is turned off, the cluster should update itself once this starts...
+  #The following servers "seed" the cluster settings.
+  #I've set this to a single server to prove the clustering and wls plugin is working.
+  WebLogicCluster     {{ inventory_hostname }}:8002
+  DebugConfigInfo     ON
+  SecureProxy         ON
+  WLSSLWallet         /home/oracle/certs/wallet
+#  WLProxySSL         ON
+#  KeepAliveEnabled   ON
+#  KeepAliveSecs      15
+
+  <Location / >
+    SetHandler weblogic-handler
+    WLSRequest ON
+  </Location>
+
+</IfModule>

@@ -1,0 +1,17 @@
+---
+
+oracle_user: oracle
+oracle_group: oinstall 
+java_home: /usr/java/default
+oracle_base: /opt/oracle
+domain_base: /home/oracle
+mw_home: "{{ oracle_base }}/middleware"
+
+identity_keystore_path: "{{ oracle_base }}/certs"
+identity_keystore_file: "{{ identity_keystore_path }}/identity.jks"
+
+weblogic_plugin_home: "{{ oracle_base }}/weblogic-plugin"
+tls_path: /etc/pki/tls
+private_key_file: "{{ tls_path }}/private/{{ ansible_fqdn }}.key"
+public_cert_file: "{{ tls_path }}/certs/{{ ansible_fqdn }}.crt"
+
