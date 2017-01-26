@@ -51,6 +51,7 @@
           dest: /etc/httpd/conf.modules.d/00-mpm.conf
 
       - name: template over the ssl.conf file
+        template:
           src:  templates/ssl.conf.j2
           dest: /etc/httpd/conf.d/ssl.conf
 
