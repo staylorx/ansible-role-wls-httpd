@@ -21,7 +21,7 @@
       - name: pull WLS plugin
         get_url: 
           url: "{{ wlsplugin_src }}"
-          dest: "{{ oracle_base }}/installer"
+          dest: "{{ oracle_base }}/installer/{{ wlsplugin_file }}"
           owner: oracle 
           group: oinstall
 
