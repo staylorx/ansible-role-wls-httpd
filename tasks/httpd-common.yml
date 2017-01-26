@@ -21,14 +21,14 @@
       - name: pull WLS plugin
         get_url: 
           url: "{{ wlsplugin_src }}"
-          dest: "{{ oracle_base }}/installer/{{ wlsplugin_file }}"
+          dest: "{{ weblogic_plugin_home }}/{{ wlsplugin_file }}"
           owner: oracle 
           group: oinstall
 
       - name: unzip plugin
         unarchive: 
           copy:  no 
-          src:   "{{ oracle_base }}/installer/{{ wlsplugin_file }}"
+          src:   "{{ weblogic_plugin_home }}/{{ wlsplugin_file }}"
           dest:  "{{ weblogic_plugin_home }}" 
           owner: oracle 
           group: oinstall
