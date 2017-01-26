@@ -50,17 +50,9 @@
           src:  templates/00-mpm.conf.j2
           dest: /etc/httpd/conf.modules.d/00-mpm.conf
 
-      - name: changeover ssl key
-        lineinfile:
-          dest:   /etc/httpd/conf.d/ssl.conf
-          regexp: "^SSLCertificateKeyFile "
-          line:   "SSLCertificateKeyFile {{ private_key_file }}"
-
-      - name: changeover ssl cert
-        lineinfile:
-          dest:   /etc/httpd/conf.d/ssl.conf
-          regexp: "^SSLCertificateFile "
-          line:   "SSLCertificateFile {{ public_cert_file }}"
+      - name: template over the ssl.conf file
+          src:  templates/ssl.conf.j2
+          dest: /etc/httpd/conf.d/ssl.conf
 
       - name: the weblogic plugin in needs a wallet
         template:
