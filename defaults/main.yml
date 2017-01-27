@@ -23,7 +23,7 @@ ssl_certificate_key_file: "{{ tls_path }}/private/{{ ansible_fqdn }}.key"
 ssl_protocol: "all -SSLv2 -SSLv3"
 ssl_cipher_suite: "HIGH:MEDIUM:!aNULL:!MD5:!SEED:!IDEA"
 
-weblogic_plugin_debug: "ON"
+weblogic_plugin_debug: false
 
 #Only need one to seed. The plugin itself will fill in from the cluster itself.
 managed_server_ssl_port: 8002
