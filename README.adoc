@@ -6,27 +6,36 @@ Installs Apache HTTPD and the WebLogic Plugin
 Requirements
 ------------
 
-This presumes the wls domain(s) have been created. Currently supports 12c only.
-
-
-Role Variables
---------------
-
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+This presumes the wls domain(s) have been created. Currently supports RHEL and 12c only.
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None. 
 
 Example Playbook
 ----------------
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
-    - hosts: servers
+    - hosts: managed
+      become: yes
+      become_user: root
+      vars:
+        wlsplugin_file: WLSPlugin12.2.1.2.0-Apache2.2-Apache2.4-Linux_x86_64-12.2.1.2.0.zip
+        wlsplugin_src: "http://artifactory.your.domain/artifactory/ext-release-local/com/oracle/weblogic/wls_plugin/12.2.1.2.0/{{ wlsplugin_file }}"
+        oracle_base: /opt/oracle/12212
+        extended_status: yes
+        keep_alive: yes
+        enable_mmap: yes
+        server_admin: "yourgroovyemail@yourplace.com"
+      pre_tasks:
+        - yum:
+            name: "*"
+            exclude: kernel*
+            state: latest
       roles:
-         - { role: staylorx.wls-httpd }
+        - role: staylorx.wls-httpd
 
 License
 -------

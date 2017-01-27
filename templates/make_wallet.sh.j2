@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Placed here by {{ lookup('env','USER') }} using Ansible, {{ ansible_date_time.date }}.
+# May be overwritten later.
+#
+
 export JAVA_HOME={{ java_home }}
 export ORAPKI={{ oracle_base }}/weblogic-plugin/bin/orapki
 

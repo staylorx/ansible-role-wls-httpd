@@ -1,0 +1,46 @@
+---
+
+- name: clear wls plugin landing
+  file:
+    path:  "{{ weblogic_plugin_home }}"
+    state: absent
+
+- name: create plugin folder
+  file: 
+    path:  "{{ weblogic_plugin_home }}" 
+    owner: oracle 
+    group: oinstall
+    mode:  0750
+    state: directory
+
+- name: pull WLS plugin
+  get_url: 
+    url: "{{ wlsplugin_src }}"
+    dest: "{{ weblogic_plugin_home }}/{{ wlsplugin_file }}"
+    owner: oracle 
+    group: oinstall
+
+- name: unzip plugin
+  unarchive: 
+    copy:  no 
+    src:   "{{ weblogic_plugin_home }}/{{ wlsplugin_file }}"
+    dest:  "{{ weblogic_plugin_home }}" 
+    owner: oracle 
+    group: oinstall
+
+- name: create lib folder
+  file:
+    path:  "{{ weblogic_plugin_lib }}"
+    mode:  0755
+    state: directory
+
+- name: copy libraries
+  shell: install -m 0755 {{ weblogic_plugin_home }}/lib/* {{ weblogic_plugin_lib }}
+
+- name: copy httpd modules 
+  shell: install -m 0755 {{ weblogic_plugin_home }}/lib/mod_wl* /etc/httpd/modules
+
+- name: update sysconfig/http
+  template:
+    src:  templates/sysconfig-httpd.j2
+    dest: /etc/sysconfig/httpd

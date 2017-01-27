@@ -1,0 +1,20 @@
+---
+
+- name: the weblogic plugin in needs a wallet
+  template:
+    src:   templates/make_wallet.sh.j2
+    dest:  "{{ oracle_base }}/installer/make_wallet.sh"
+    mode:  0700
+    owner: oracle
+    group: oinstall
+
+- name: run the wallet maker
+  command: "{{ oracle_base }}/installer/make_wallet.sh"
+  become: yes
+  become_user: oracle
+
+- name: remove the wallet maker
+  file:
+    path:  "{{ oracle_base }}/installer/make_wallet.sh"
+    state: absent
+

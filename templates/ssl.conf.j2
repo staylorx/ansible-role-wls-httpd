@@ -1,8 +1,10 @@
+# Placed here by {{ lookup('env','USER') }} using Ansible, {{ ansible_date_time.date }}.
+# May be overwritten later.
 #
-# When we also provide SSL we have to listen to the
+# When we also provide SSL we have to listen to the 
 # the HTTPS port in addition.
 #
-Listen 443 https
+Listen {{ ssl_port }} https
 
 ##
 ##  SSL Global Context
@@ -18,13 +20,13 @@ Listen 443 https
 SSLPassPhraseDialog exec:/usr/libexec/httpd-ssl-pass-dialog
 
 #   Inter-Process Session Cache:
-#   Configure the SSL Session Cache: First the mechanism
+#   Configure the SSL Session Cache: First the mechanism 
 #   to use and second the expiring timeout (in seconds).
 SSLSessionCache         shmcb:/run/httpd/sslcache(512000)
 SSLSessionCacheTimeout  300
 
 #   Pseudo Random Number Generator (PRNG):
-#   Configure one or more sources to seed the PRNG of the
+#   Configure one or more sources to seed the PRNG of the 
 #   SSL library. The seed data should be of good random quality.
 #   WARNING! On some platforms /dev/random blocks if not enough entropy
 #   is available. This means you then cannot use the /dev/random device
@@ -44,7 +46,7 @@ SSLRandomSeed connect builtin
 # accelerators. Use "openssl engine -v" to list supported
 # engine names.  NOTE: If you enable an accelerator and the
 # server does not start, consult the error logs and ensure
-# your accelerator is functioning properly.
+# your accelerator is functioning properly. 
 #
 SSLCryptoDevice builtin
 #SSLCryptoDevice ubsec
@@ -53,12 +55,11 @@ SSLCryptoDevice builtin
 ## SSL Virtual Host Context
 ##
 
-<VirtualHost _default_:443>
-
+<VirtualHost _default_:{{ ssl_port }}>
 
 # General setup for the virtual host, inherited from global configuration
 #DocumentRoot "/var/www/html"
-#ServerName www.example.com:443
+#ServerName www.example.com:{{ ssl_port }}
 
 # Use separate log files for the SSL virtual host; note that LogLevel
 # is not inherited from httpd.conf.
@@ -73,12 +74,12 @@ SSLEngine on
 #   SSL Protocol support:
 # List the enable protocol levels with which clients will be able to
 # connect.  Disable SSLv2 access by default:
-SSLProtocol all -SSLv2 -SSLv3
+SSLProtocol {{ ssl_protocol }}
 
 #   SSL Cipher Suite:
 #   List the ciphers that the client is permitted to negotiate.
 #   See the mod_ssl documentation for a complete list.
-SSLCipherSuite HIGH:MEDIUM:!aNULL:!MD5:!SEED:!IDEA
+SSLCipherSuite {{ ssl_cipher_suite }}
 
 #   Speed-optimized SSL Cipher configuration:
 #   If speed is your main concern (on busy HTTPS servers e.g.),
@@ -91,21 +92,21 @@ SSLCipherSuite HIGH:MEDIUM:!aNULL:!MD5:!SEED:!IDEA
 #   compromised, captures of past or future traffic must be
 #   considered compromised, too.
 #SSLCipherSuite RC4-SHA:AES128-SHA:HIGH:MEDIUM:!aNULL:!MD5
-#SSLHonorCipherOrder on
+#SSLHonorCipherOrder on 
 
 #   Server Certificate:
 # Point SSLCertificateFile at a PEM encoded certificate.  If
 # the certificate is encrypted, then you will be prompted for a
 # pass phrase.  Note that a kill -HUP will prompt again.  A new
 # certificate can be generated using the genkey(1) command.
-SSLCertificateFile {{ public_cert_file }}
+SSLCertificateFile {{ ssl_certificate_file }}
 
 #   Server Private Key:
 #   If the key is not combined with the certificate, use this
 #   directive to point at the key file.  Keep in mind that if
 #   you've both a RSA and a DSA private key you can configure
 #   both in parallel (to also allow the use of DSA ciphers, etc.)
-SSLCertificateKeyFile {{ private_key_file }}
+SSLCertificateKeyFile {{ ssl_certificate_key_file }}
 
 #   Server Certificate Chain:
 #   Point SSLCertificateChainFile at a file containing the
@@ -171,7 +172,7 @@ SSLCertificateKeyFile {{ private_key_file }}
 #     and no other module can change it.
 #   o OptRenegotiate:
 #     This enables optimized SSL connection renegotiation handling when SSL
-#     directives are used in per-directory context.
+#     directives are used in per-directory context. 
 #SSLOptions +FakeBasicAuth +ExportCertData +StrictRequire
 <Files ~ "\.(cgi|shtml|phtml|php3?)$">
     SSLOptions +StdEnvVars
@@ -197,7 +198,7 @@ SSLCertificateKeyFile {{ private_key_file }}
 #     alert of the client. This is 100% SSL/TLS standard compliant, but in
 #     practice often causes hanging connections with brain-dead browsers. Use
 #     this only for browsers where you know that their SSL implementation
-#     works correctly.
+#     works correctly. 
 #   Notice: Most problems of broken clients are also related to the HTTP
 #   keep-alive facility, so you usually additionally want to disable
 #   keep-alive for those clients, too. Use variable "nokeepalive" for this.
@@ -214,6 +215,5 @@ BrowserMatch "MSIE [2-5]" \
 CustomLog logs/ssl_request_log \
           "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
 
-</VirtualHost>
-
+</VirtualHost>                                  
 

@@ -1,22 +1,28 @@
+# Placed here by {{ lookup('env','USER') }} using Ansible, {{ ansible_date_time.date }}.
+# May be overwritten later.
+#
 ServerRoot "/etc/httpd"
 Listen 80
 Include conf.modules.d/*.conf
 User apache
 Group apache
-ServerAdmin crossapps-middleware@cu.edu
+ServerAdmin {{ server_admin }}
 #ServerName www.example.com:80
 
-KeepAlive On
+KeepAlive {{ keep_alive | ternary("ON","Off") }}
+{% if keep_alive == true %}
+MaxKeepAliveRequests {{ max_keep_alive_requests }}
+KeepAliveTimeout {{ keep_alive_timeout }}
+{% endif %}
+
 #WebLogic expects a worker MPM and single servers
-ServerLimit 1
-StartServers 1
-ThreadsPerChild 25
-ThreadLimit 64
-MaxKeepAliveRequests 20
-MaxRequestWorkers 400
-KeepAliveTimeout 5
-GracefulShutdownTimeout 5
-EnableMMAP off
+ServerLimit {{ server_limit }}
+StartServers {{ start_servers }}
+ThreadsPerChild {{ threads_per_child }}
+ThreadLimit {{ thread_limit }}
+MaxRequestWorkers {{ max_request_workers }}
+GracefulShutdownTimeout {{ graceful_shutdown_timeout }}
+EnableMMAP {{ enable_mmap | ternary("ON","Off") }}
 
 <Directory />
     AllowOverride none
@@ -46,7 +52,7 @@ DocumentRoot "/var/www/html"
 </Files>
 
 ErrorLog "logs/error_log"
-LogLevel warn
+LogLevel {{ log_level }}
 
 <IfModule log_config_module>
     LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
@@ -82,11 +88,13 @@ AddDefaultCharset UTF-8
     MIMEMagicFile conf/magic
 </IfModule>
 
-ExtendedStatus on
-<Location /module_status>
+{% if extended_status == true %}
+ExtendedStatus ON
+<Location {{ extended_status_path }}>
   SetHandler server-status
 </Location>
+{% endif %}
 
-EnableSendfile on
+EnableSendfile {{ enable_send_file | ternary("ON","Off") }}
 IncludeOptional conf.d/*.conf
 

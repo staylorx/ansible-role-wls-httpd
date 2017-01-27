@@ -1,82 +1,39 @@
 ---
 
-      - name: install apache with mod_ssl
-        yum: 
-          name:  mod_ssl 
-          state: latest
+- name: install apache with mod_ssl
+  yum:
+    name:  mod_ssl
+    state: latest
 
-      - name: clear wls plugin landing
-        file:
-          path:  "{{ weblogic_plugin_home }}"
-          state: absent
+- name: send over conf
+  template:
+    src:  templates/{{ item }}.j2
+    dest: /etc/httpd/conf/{{ item }}
+  with_items:
+    - httpd.conf
 
-      - name: create plugin folder
-        file: 
-          path:  "{{ weblogic_plugin_home }}" 
-          owner: oracle 
-          group: oinstall
-          mode:  0750
-          state: directory
+- name: template over conf.d
+  template:
+    src:  templates/{{ item }}.j2
+    dest: /etc/httpd/conf.d/{{ item }}
+  with_items:
+    - ssl.conf
 
-      - name: pull WLS plugin
-        get_url: 
-          url: "{{ wlsplugin_src }}"
-          dest: "{{ weblogic_plugin_home }}/{{ wlsplugin_file }}"
-          owner: oracle 
-          group: oinstall
+- name: send over modules
+  template:
+    src:  templates/{{ item }}.j2
+    dest: /etc/httpd/conf.modules.d/{{ item }}
+  with_items:
+    - 00-base.conf
+    - 00-mpm.conf
+    - 00-proxy.conf
+    - 01-weblogic-managed.conf
 
-      - name: unzip plugin
-        unarchive: 
-          copy:  no 
-          src:   "{{ weblogic_plugin_home }}/{{ wlsplugin_file }}"
-          dest:  "{{ weblogic_plugin_home }}" 
-          owner: oracle 
-          group: oinstall
+- name: clear some modules (not wanted here)
+  file:
+    path:  /etc/httpd/conf.modules.d/{{ item }}
+    state: absent
+  with_items:
+    - 00-lua.conf
+    - 00-dav.conf
 
-      # blunt but works. Had problems with ldconfig, permissions, and links.
-      - name: copy libraries
-        shell: cp {{ weblogic_plugin_home }}/lib/* /usr/lib64
-
-      - name: copy httpd modules
-        shell: cp {{ weblogic_plugin_home }}/lib/mod_* /etc/httpd/modules
-
-      - name: send over httpd.conf
-        template:
-          src:  templates/httpd.conf.j2
-          dest: /etc/httpd/conf/httpd.conf 
-
-      - name: switch the prefork for event mpm
-        template:
-          src:  templates/00-mpm.conf.j2
-          dest: /etc/httpd/conf.modules.d/00-mpm.conf
-
-      - name: template over the ssl.conf file
-        template:
-          src:  templates/ssl.conf.j2
-          dest: /etc/httpd/conf.d/ssl.conf
-
-      - name: the weblogic plugin in needs a wallet
-        template:
-          src:   templates/make_wallet.sh.j2
-          dest:  "{{ oracle_base }}/installer/make_wallet.sh"
-          mode:  0700
-          owner: oracle
-          group: oinstall
-
-      - name: run the wallet maker
-        command: "{{ oracle_base }}/installer/make_wallet.sh"
-        become: yes
-        become_user: oracle
-
-      - name: remove the wallet maker
-        file:
-          path:  "{{ oracle_base }}/installer/make_wallet.sh"
-          state: absent
-
-      - name: disable specific modules
-        replace: dest=/etc/httpd/conf.modules.d/{{ item.file }} regexp="^{{ item.module }}$" replace="#{{ item.module }}" 
-        with_items:
-          - { file: "00-base.conf", module: "LoadModule authn_dbd_module modules/mod_authn_dbd.so" }
-          - { file: "00-base.conf", module: "LoadModule authn_dbm_module modules/mod_authn_dbm.so" }
-          - { file: "00-base.conf", module: "LoadModule authz_dbd_module modules/mod_authz_dbd.so" }
-          - { file: "00-base.conf", module: "LoadModule authz_dbm_module modules/mod_authz_dbm.so" }

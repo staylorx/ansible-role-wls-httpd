@@ -1,3 +1,7 @@
+# Placed here by {{ lookup('env','USER') }} using Ansible, {{ ansible_date_time.date }}.
+# May be overwritten later.
+#
+
 #This configuration file loads a weblogic plugin module.
 
 LoadModule weblogic_module modules/mod_wl_24.so
@@ -6,13 +10,10 @@ LoadModule weblogic_module modules/mod_wl_24.so
   #Unless dynamic is turned off, the cluster should update itself once this starts...
   #The following servers "seed" the cluster settings.
   #I've set this to a single server to prove the clustering and wls plugin is working.
-  WebLogicCluster     {{ inventory_hostname }}:8002
-  DebugConfigInfo     ON
+  WebLogicCluster     {{ inventory_hostname }}:{{ managed_server_ssl_port }}
+  DebugConfigInfo     {{ weblogic_plugin_debug }}
   SecureProxy         ON
-  WLSSLWallet         /home/oracle/certs/wallet
-#  WLProxySSL         ON
-#  KeepAliveEnabled   ON
-#  KeepAliveSecs      15
+  WLSSLWallet         {{ oracle_base }}/certs/wallet
 
   <Location / >
     SetHandler weblogic-handler
