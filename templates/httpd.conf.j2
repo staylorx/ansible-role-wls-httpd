@@ -18,10 +18,15 @@ KeepAliveTimeout {{ keep_alive_timeout }}
 #WebLogic expects a worker MPM and single servers
 ServerLimit {{ server_limit }}
 StartServers {{ start_servers }}
+
 ThreadsPerChild {{ threads_per_child }}
 ThreadLimit {{ thread_limit }}
+MinSpareThreads {{ min_spare_threads }}
+MaxSpareThreads {{ max_spare_threads }}
+
 MaxRequestWorkers {{ max_request_workers }}
 GracefulShutdownTimeout {{ graceful_shutdown_timeout }}
+
 EnableMMAP {{ enable_mmap | ternary("ON","Off") }}
 
 <Directory />
