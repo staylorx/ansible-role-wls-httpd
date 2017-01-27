@@ -18,24 +18,27 @@ Example Playbook
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
-    - hosts: managed
-      become: yes
-      become_user: root
-      vars:
-        wlsplugin_file: WLSPlugin12.2.1.2.0-Apache2.2-Apache2.4-Linux_x86_64-12.2.1.2.0.zip
-        wlsplugin_src: "http://artifactory.your.domain/artifactory/ext-release-local/com/oracle/weblogic/wls_plugin/12.2.1.2.0/{{ wlsplugin_file }}"
-        oracle_base: /opt/oracle/12212
-        extended_status: yes
-        keep_alive: yes
-        enable_mmap: yes
-        server_admin: "yourgroovyemail@yourplace.com"
-      pre_tasks:
-        - yum:
-            name: "*"
-            exclude: kernel*
-            state: latest
-      roles:
-        - role: staylorx.wls-httpd
+[source,yaml]
+----
+- hosts: managed
+  become: yes
+  become_user: root
+  vars:
+    wlsplugin_file: WLSPlugin12.2.1.2.0-Apache2.2-Apache2.4-Linux_x86_64-12.2.1.2.0.zip
+    wlsplugin_src: "http://artifactory.your.domain/artifactory/ext-release-local/com/oracle/weblogic/wls_plugin/12.2.1.2.0/{{ wlsplugin_file }}"
+    oracle_base: /opt/oracle/12212
+    extended_status: yes
+    keep_alive: yes
+    enable_mmap: yes
+    server_admin: "yourgroovyemail@yourplace.com"
+  pre_tasks:
+    - yum:
+        name: "*"
+        exclude: kernel*
+        state: latest
+  roles:
+    - role: staylorx.wls-httpd
+----
 
 License
 -------
