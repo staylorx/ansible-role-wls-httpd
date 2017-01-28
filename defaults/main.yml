@@ -23,8 +23,6 @@ ssl_certificate_key_file: "{{ tls_path }}/private/{{ ansible_fqdn }}.key"
 ssl_protocol: "all -SSLv2 -SSLv3"
 ssl_cipher_suite: "HIGH:MEDIUM:!aNULL:!MD5:!SEED:!IDEA"
 
-weblogic_plugin_debug: false
-
 #Only need one to seed. The plugin itself will fill in from the cluster itself.
 managed_server_ssl_port: 8002
 
@@ -32,20 +30,3 @@ log_level: "warn"
 extended_status: false
 extended_status_path: "/module_status"
 
-keep_alive: false
-max_keep_alive_requests: 20
-keep_alive_timeout: 5
-
-enable_mmap: false
-enable_send_file: false
-
-server_limit: 1
-start_servers: 1
-
-threads_per_child: 25
-thread_limit: 64
-min_spare_threads: 25
-max_spare_threads: 75
-
-max_request_workers: 25
-graceful_shutdown_timeout: 5

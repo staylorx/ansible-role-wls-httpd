@@ -9,25 +9,52 @@ Group apache
 ServerAdmin {{ server_admin }}
 #ServerName www.example.com:80
 
+{% if keep_alive is defined %}
 KeepAlive {{ keep_alive | ternary("ON","Off") }}
-{% if keep_alive == true %}
+{% endif %}
+{% if max_keep_alive_requests is defined %}
 MaxKeepAliveRequests {{ max_keep_alive_requests }}
+{% endif %}
+{% if keep_alive_timeout is defined %}
 KeepAliveTimeout {{ keep_alive_timeout }}
 {% endif %}
 
-#WebLogic expects a worker MPM and single servers
+<IfModule mpm_worker_module>
+{% if server_limit is defined %}
 ServerLimit {{ server_limit }}
+{% endif %}
+{% if start_servers is defined %}
 StartServers {{ start_servers }}
+{% endif %}
 
+{% if threads_per_child is defined %}
 ThreadsPerChild {{ threads_per_child }}
+{% endif %}
+{% if thread_limit is defined %}
 ThreadLimit {{ thread_limit }}
+{% endif %}
+{% if min_spare_threads is defined %}
 MinSpareThreads {{ min_spare_threads }}
+{% endif %}
+{% if max_spare_threads is defined %}
 MaxSpareThreads {{ max_spare_threads }}
+{% endif %}
 
+{% if max_request_workers is defined %}
 MaxRequestWorkers {{ max_request_workers }}
-GracefulShutdownTimeout {{ graceful_shutdown_timeout }}
+{% endif %}
+{% if max_requests_per_child is defined %}
+MaxRequestsPerChild {{ max_requests_per_child }}
+{% endif %}
+</IfModule>
 
+{% if graceful_shutdown_timeout is defined %}
+GracefulShutdownTimeout {{ graceful_shutdown_timeout }}
+{% endif %}
+
+{% if emable_mmap is defined %}
 EnableMMAP {{ enable_mmap | ternary("ON","Off") }}
+{% endif %}
 
 <Directory />
     AllowOverride none
@@ -100,6 +127,9 @@ ExtendedStatus ON
 </Location>
 {% endif %}
 
+{% if enable_send_file is defined %}
 EnableSendfile {{ enable_send_file | ternary("ON","Off") }}
+{% endif %}
+
 IncludeOptional conf.d/*.conf
 

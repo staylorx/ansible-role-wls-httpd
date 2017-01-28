@@ -11,7 +11,9 @@ LoadModule weblogic_module modules/mod_wl_24.so
   #The following servers "seed" the cluster settings.
   #I've set this to a single server to prove the clustering and wls plugin is working.
   WebLogicCluster     {{ inventory_hostname }}:{{ managed_server_ssl_port }}
-  DebugConfigInfo     {{ weblogic_plugin_debug | ternary("ON","Off") }}
+{% if debug_config_info is defined %}
+  DebugConfigInfo     {{ debug_config_info | ternary("ON","Off") }}
+{% endif %}
   SecureProxy         ON
   WLSSLWallet         {{ oracle_base }}/certs/wallet
 

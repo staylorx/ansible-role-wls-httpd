@@ -13,6 +13,42 @@ Dependencies
 
 None. 
 
+Variables
+---------
+
+The following variables are not defaults in Ansible. If you set them they'll show up in the files. Otherwise you get Apache defaults.
+
+Values are shown, but are examples. Boolean are Ansible bools: true/false, yes/no and converted to ON/Off in the templates.
+
+[source,yaml]
+----
+WebLogic Plugin:
+  debug_config_info: true
+
+http.conf:
+  keep_alive: false
+  max_keep_alive_requests: 20
+  keep_alive_timeout: 5
+
+  enable_mmap: false
+  enable_send_file: false
+
+  server_limit: 1
+  start_servers: 1
+
+  threads_per_child: 25
+  thread_limit: 64
+  min_spare_threads: 25
+  max_spare_threads: 75
+
+  max_request_workers: 25
+  max_requests_per_child: 0
+  graceful_shutdown_timeout: 5
+
+  enable_mmap: false
+  enable_send_file: false
+----
+
 Example Playbook
 ----------------
 
