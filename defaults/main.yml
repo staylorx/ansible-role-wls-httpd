@@ -7,7 +7,7 @@ oracle_base: /opt/oracle
 domain_base: /home/oracle
 mw_home: "{{ oracle_base }}/middleware"
 
-identity_keystore_path: "{{ domain_base }}/certs"
+identity_keystore_path: "{{ oracle_base }}/certs"
 identity_keystore_file: "{{ identity_keystore_path }}/identity.jks"
 
 weblogic_plugin_home: "{{oracle_base }}/weblogic-plugin"
