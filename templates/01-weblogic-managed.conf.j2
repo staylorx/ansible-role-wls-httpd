@@ -15,7 +15,7 @@ LoadModule weblogic_module modules/mod_wl_24.so
   DebugConfigInfo     {{ debug_config_info | ternary("ON","Off") }}
 {% endif %}
   SecureProxy         ON
-  WLSSLWallet         {{ oracle_base }}/certs/wallet
+  WLSSLWallet         {{ identity_keystore_path }}/wallet
 
   <Location / >
     SetHandler weblogic-handler
