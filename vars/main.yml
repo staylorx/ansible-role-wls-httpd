@@ -1,0 +1,3 @@
+
+identity_keystore_path: "{{ oracle_base }}/certs"
+identity_keystore_file: "{{ identity_keystore_path }}/identity.jks"
