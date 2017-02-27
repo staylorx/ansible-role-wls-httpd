@@ -7,10 +7,7 @@
 LoadModule weblogic_module modules/mod_wl_24.so
 
 <IfModule mod_weblogic.c>
-  #Unless dynamic is turned off, the cluster should update itself once this starts...
-  #The following servers "seed" the cluster settings.
-  #I've set this to a single server to prove the clustering and wls plugin is working.
-  WebLogicCluster     {{ inventory_hostname }}:{{ managed_server_ssl_port }}
+  WebLogicCluster     {{ weblogic_cluster_listen_address }}
 {% if debug_config_info is defined %}
   DebugConfigInfo     {{ debug_config_info | ternary("ON","Off") }}
 {% endif %}
