@@ -15,5 +15,5 @@ $ORAPKI wallet create -wallet {{ identity_keystore_path }}/wallet -auto_login_on
 
 # the ansible staylorx.keystore role creates a p12 and leaves it under /etc/pki/tls/misc/identity.p12
 echo add the p12 to the wallet
-$ORAPKI wallet import_pkcs12 -wallet {{ identity_keystore_path }}/wallet -auto_login_only -pkcs12file {{ tls_path }}/misc/identity.p12 -pkcs12pwd {{ keystore_password }}
+$ORAPKI wallet import_pkcs12 -wallet {{ identity_keystore_path }}/wallet -auto_login_only -pkcs12file {{ tls_path }}/misc/{{ ansible_fqdn }}.p12 -pkcs12pwd {{ keystore_password }}
 
